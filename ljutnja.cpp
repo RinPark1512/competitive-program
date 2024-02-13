@@ -13,60 +13,64 @@ int main(){
     cin >> candy;
     cin >> children;
     vector<long long> greed;
-    for (long long i = 0; i < children; i++){
+    for (long long i = 0; i < children; i++) {
         long long temp;
         cin >> temp;
         greed.push_back(temp);
     }
+    // sort greed/how many candy each children want
     sort(greed.begin(), greed.end());
     long long min = 0;
     long long max = greed[greed.size() - 1];
     long long noCandy, trackCandy, maxNoCan;
+    // keep track of the most amount of candy we can give the children
     long long maxCan = max;
+    // tracks the smallest amount we can withold from the children
     maxNoCan = max;
-    // how many candy we can not give the children
     while (min < max) {
-        noCandy = (min + max) / 2;
+        noCandy = (min + max) / 2; // choose how much to withhold from the children
         trackCandy = 0;
-        for (long long i = 0; i < greed.size(); i++){
+        for (long long i = 0; i < greed.size(); i++) {
             if (greed[i] > noCandy) {
-                trackCandy += greed[i] - noCandy;
+                trackCandy += greed[i] - noCandy; // add together how much candy we give out
             }
         }
         if (trackCandy > candy) {
-            //give less
+            // give less candy aka withhold more
             min = noCandy + 1;
         } else {
-            // give more
-            if (maxNoCan > noCandy){
-                maxCan = trackCandy;
+            if (maxNoCan > noCandy) { // track the smallest amount of candy we can withhold from the children
+                maxCan = trackCandy; // if we found a smaller value, update
                 maxNoCan = noCandy;
             }
-            max = noCandy;
+            max = noCandy; // give more candy aka withhold less
         }
     }
-    long long diff = candy - maxCan;
+    long long diff = candy - maxCan; // see if we have leftover candy
     long long anger = 0;
-    for (long long g= 0; g < greed.size(); g++){
+    for (long long g = 0; g < greed.size(); g++){
         if (greed[g] > maxNoCan) {
-            greed[g] = maxNoCan;
+            greed[g] = maxNoCan; // give the children candy, track remaining greed
         }            
     }
-    if (diff != 0) {
-        long long ind = greed.size() - 1;
-        while (diff > 0){
-            if (ind < 0){
+    if (diff > 0) { // if we have leftover candy, distribute
+        long long ind = greed.size() - 1; // start at the most greed
+        while (diff > 0) { // while we still have candy to give out
+            if (ind < 0) { 
+                // if we hit the end, loop back around
                 ind = greed.size() - 1;
             }
-            if (greed[ind] != 0){
+            // if we can, give candy one at a time
+            if (greed[ind] > 0) {
                 greed[ind]--;
                 diff--;
             }
             ind--;
         }
     }
-    for (long long g= 0; g < greed.size(); g++){
-        anger += (greed[g] * greed[g]);  
+    // calculate total anger
+    for (long long g = 0; g < greed.size(); g++) {
+        anger += (greed[g] * greed[g]); // the Math function is weird, so we doing this manually
     }
     cout << anger << "\n";
     return 0;
