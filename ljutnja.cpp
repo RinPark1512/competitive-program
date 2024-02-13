@@ -13,24 +13,60 @@ int main(){
     cin >> candy;
     cin >> children;
     vector<long long> greed;
-    for (int i = 0; i < children; i++){
-        int temp;
+    for (long long i = 0; i < children; i++){
+        long long temp;
         cin >> temp;
         greed.push_back(temp);
     }
     sort(greed.begin(), greed.end());
-    while (candy > 0){
-        candy -= greed[greed.size() - 1];
-        if (candy >= 0) {
-            greed.pop_back();
+    long long min = 0;
+    long long max = greed[greed.size() - 1];
+    long long noCandy, trackCandy, maxNoCan;
+    long long maxCan = max;
+    maxNoCan = max;
+    // how many candy we can not give the children
+    while (min < max) {
+        noCandy = (min + max) / 2;
+        trackCandy = 0;
+        for (long long i = 0; i < greed.size(); i++){
+            if (greed[i] > noCandy) {
+                trackCandy += greed[i] - noCandy;
+            }
+        }
+        if (trackCandy > candy) {
+            //give less
+            min = noCandy + 1;
         } else {
-            greed[greed.size() - 1] = abs(candy);
-            break;
+            // give more
+            if (maxNoCan > noCandy){
+                maxCan = trackCandy;
+                maxNoCan = noCandy;
+            }
+            max = noCandy;
         }
     }
-    int anger = 0;
-    for (int i = 0; i < greed.size(); i++) {
-        anger += (greed[i] * greed[i]);
+    long long diff = candy - maxCan;
+    long long anger = 0;
+    for (long long g= 0; g < greed.size(); g++){
+        if (greed[g] > maxNoCan) {
+            greed[g] = maxNoCan;
+        }            
+    }
+    if (diff != 0) {
+        long long ind = greed.size() - 1;
+        while (diff > 0){
+            if (ind < 0){
+                ind = greed.size() - 1;
+            }
+            if (greed[ind] != 0){
+                greed[ind]--;
+                diff--;
+            }
+            ind--;
+        }
+    }
+    for (long long g= 0; g < greed.size(); g++){
+        anger += (greed[g] * greed[g]);  
     }
     cout << anger << "\n";
     return 0;

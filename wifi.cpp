@@ -23,37 +23,34 @@ int main(){
             houseNum.push_back(temp);
         }
         sort(houseNum.begin(), houseNum.end());
-        // double p = houses / points;
         double min = 0.0;
         double max = houseNum[houseNum.size() - 1];
-        // double maxDis = 0.0;
         // we only care abt the max distance, so we start with the biggest distance and 
         // see if we can cover enough houses with it
-        while (min < max) {
-            double mid = (max + min) / 2;
+        double eps = 1e-9;
+        while (abs(max - min) > eps) {
+            double mid = (max + min) / 2.0;
             // given ^ distance from the access point, how many houses can not be reached
-            double housesNotCovered = 0;
-            double pHouseInd = 0;
+            double housesNotCovered = 1;
+            double dis = houseNum[0] + mid;
             for (double k = 1; k < houses; k++){
                 // if it is not covered, count
-                if ((houseNum[k] - houseNum[pHouseInd]) > mid) {
+                if ((houseNum[k] - dis) > mid) {
                     housesNotCovered++;
-                    pHouseInd = k;
+                    dis = houseNum[k] + mid;
                 }
                 // since it can be reached at curr dis, we move on because there is the possibility of
                 // finding other houses reachable at this dis
             }
-            if (housesNotCovered >= points) {
-                // maxDis = mid;
-                min = mid;
+            if (housesNotCovered <= points) {
+                max = mid;
             } else {
-                max = mid - 1;
+                min = mid;
             }
         }
-        // cout << 1.0 << " ";
         cout << fixed;
         cout.precision(1);
-        cout << min << "\n";
+        cout << max << "\n";
     }
     
     return 0;
