@@ -5,6 +5,7 @@
         "__split_buffer": "cpp",
         "string": "cpp",
         "ios": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "ostream": "cpp"
     }
 }
